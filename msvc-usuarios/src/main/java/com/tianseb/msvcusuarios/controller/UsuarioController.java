@@ -38,7 +38,7 @@ public record UsuarioController(UsuarioService usuarioService) {
                                      @PathVariable Long id) {
         Optional<Usuario> response = usuarioService.porId(id);
 
-        if (response.isPresent()) {
+            if (response.isPresent()) {
             Usuario usuarioDb = response.get();
             usuarioDb.setEmail(usuario.getEmail());
             usuarioDb.setNombre(usuario.getNombre());
