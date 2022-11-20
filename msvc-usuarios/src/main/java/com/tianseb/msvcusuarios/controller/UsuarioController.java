@@ -1,6 +1,6 @@
 package com.tianseb.msvcusuarios.controller;
 
-import com.tianseb.msvcusuarios.models.entity.Usuario;
+import com.tianseb.msvcusuarios.models.Usuario;
 import com.tianseb.msvcusuarios.service.UsuarioService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/api/usuarios")
 public record UsuarioController(UsuarioService usuarioService) {
 
     @GetMapping
@@ -18,13 +19,11 @@ public record UsuarioController(UsuarioService usuarioService) {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> buscarId(@PathVariable Long id) {
+    public ResponseEntity<? extends Usuario> buscarId(@PathVariable Long id) {
         Optional<Usuario> response = usuarioService.porId(id);
 
-        if (response.isPresent()) {
-            return ResponseEntity.ok(response.get());
-        }
-        return ResponseEntity.notFound().build();
+        return response.<ResponseEntity<? extends Usuario>>map(ResponseEntity::ok)
+                        .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
@@ -34,7 +33,7 @@ public record UsuarioController(UsuarioService usuarioService) {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> editar(@RequestBody Usuario usuario,
+    public ResponseEntity<? extends Usuario> editar(@RequestBody Usuario usuario,
                                      @PathVariable Long id) {
         Optional<Usuario> response = usuarioService.porId(id);
 
@@ -53,7 +52,7 @@ public record UsuarioController(UsuarioService usuarioService) {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminar(@PathVariable Long id) {
+    public ResponseEntity<HttpStatus> eliminar(@PathVariable Long id) {
         Optional<Usuario> response = usuarioService.porId(id);
         if (response.isPresent()) {
             usuarioService.eliminar(id);

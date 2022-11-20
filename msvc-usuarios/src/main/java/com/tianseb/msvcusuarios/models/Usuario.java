@@ -1,4 +1,4 @@
-package com.tianseb.msvcusuarios.models.entity;
+package com.tianseb.msvcusuarios.models;
 
 import lombok.Getter;
 import lombok.Setter;

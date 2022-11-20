@@ -16,9 +16,8 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>
-            msvc-usuarios
-        </module>
+        <module>msvc-usuarios</module>
+        <module>msvc-cursos</module>
     </modules>
 
     <properties>

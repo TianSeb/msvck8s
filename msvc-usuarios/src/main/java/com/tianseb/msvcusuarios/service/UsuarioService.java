@@ -1,6 +1,6 @@
 package com.tianseb.msvcusuarios.service;
 
-import com.tianseb.msvcusuarios.models.entity.Usuario;
+import com.tianseb.msvcusuarios.models.Usuario;
 
 import java.util.List;
 import java.util.Optional;

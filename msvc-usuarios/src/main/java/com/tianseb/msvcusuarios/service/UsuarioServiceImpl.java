@@ -1,6 +1,6 @@
 package com.tianseb.msvcusuarios.service;
 
-import com.tianseb.msvcusuarios.models.entity.Usuario;
+import com.tianseb.msvcusuarios.models.Usuario;
 import com.tianseb.msvcusuarios.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
