@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "cursos")
@@ -15,6 +16,8 @@ public class Curso {
     private Long id;
 
     @Column(unique = true )
+    @NotEmpty
     private String name;
+    @NotEmpty
     private String usuarios;
 }
