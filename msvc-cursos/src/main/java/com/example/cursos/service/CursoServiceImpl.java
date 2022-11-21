@@ -1,6 +1,6 @@
 package com.example.cursos.service;
 
-import com.example.cursos.model.Curso;
+import com.example.cursos.model.entity.Curso;
 import com.example.cursos.repository.CursoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
