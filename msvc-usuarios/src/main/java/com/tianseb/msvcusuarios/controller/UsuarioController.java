@@ -20,11 +20,11 @@ public record UsuarioController(UsuarioService usuarioService) {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<? extends Usuario> buscarId(@PathVariable Long id) {
+    public ResponseEntity buscarId(@PathVariable Long id) {
         Optional<Usuario> response = usuarioService.porId(id);
 
-        return response.<ResponseEntity<? extends Usuario>>map(ResponseEntity::ok)
-                        .orElseGet(() -> ResponseEntity.notFound().build());
+        return response.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
