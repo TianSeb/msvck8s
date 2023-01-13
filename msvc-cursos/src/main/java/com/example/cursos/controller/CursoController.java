@@ -1,17 +1,16 @@
 package com.example.cursos.controller;
 
+import com.example.cursos.model.Usuario;
 import com.example.cursos.model.entity.Curso;
 import com.example.cursos.service.CursoService;
+import feign.FeignException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/cursos")
@@ -30,7 +29,7 @@ public record CursoController(CursoService cursoService) {
     }
 
     @PostMapping
-    public ResponseEntity crear(@Valid @RequestBody Curso curso, BindingResult result) {
+    public ResponseEntity<?>  crear(@Valid @RequestBody Curso curso, BindingResult result) {
 
         return result.hasErrors() ? validar(result)
                 : ResponseEntity.status(HttpStatus.CREATED).body(cursoService.guardar(curso));
@@ -66,13 +65,62 @@ public record CursoController(CursoService cursoService) {
         return ResponseEntity.notFound().build();
     }
 
+    @PutMapping("/asignar-usuario/{cursoId}")
+    public ResponseEntity<?> asignarUsuario(@RequestBody Usuario usuario,
+                                            @PathVariable Long cursoId) {
+        Optional<Usuario> o;
+        try {
+            o = cursoService.asignarUsuario(usuario, cursoId);
+        } catch(FeignException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonMap("msg", e.getMessage()));
+        }
+        if(o.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(o.get());
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/crear-usuario/{cursoId}")
+    public ResponseEntity<?> crearUsuario(@RequestBody Usuario usuario,
+                                            @PathVariable Long cursoId) {
+        Optional<Usuario> o;
+        try {
+            o = cursoService.crearUsuario(usuario, cursoId);
+        } catch(FeignException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("msg", e.getMessage()));
+        }
+        if(o.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(o.get());
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/eliminar-usuario/{cursoId}")
+    public ResponseEntity<?> eliminarUsuario(@RequestBody Usuario usuario,
+                                          @PathVariable Long cursoId) {
+        Optional<Usuario> o;
+        try {
+            o = cursoService.eliminarUsuario(usuario, cursoId);
+        } catch(FeignException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonMap("msg", e.getMessage()));
+        }
+        if(o.isPresent()) {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(o.get());
+        }
+        return ResponseEntity.notFound().build();
+    }
+
     private static ResponseEntity<Map<String, String>> validar(BindingResult result) {
         Map<String,String> errores = new HashMap<>();
         result.getFieldErrors()
-                .forEach(fieldError -> {
-                    errores.put(fieldError.getField(), "El Campo " +
-                            fieldError.getField() + " " + fieldError.getDefaultMessage());
-                });
+                .forEach(fieldError -> errores.put(fieldError.getField(), "El Campo " +
+                        fieldError.getField() + " " + fieldError.getDefaultMessage()));
         return ResponseEntity.badRequest().body(errores);
     }
 }

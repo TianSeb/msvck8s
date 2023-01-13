@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:postgresql://localhost:5432/msvc_usuarios</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="msvc_cursos@localhost" uuid="020e797d-422c-4213-b536-f1c83075d2b8">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/msvc_cursos</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>
