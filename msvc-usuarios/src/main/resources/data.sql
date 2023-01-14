@@ -1,0 +1,3 @@
+-- INSERT INTO msvc_usuarios.public (nombre, email, password)
+-- VALUES ('Marshalto', 'Marsalt@bp.com', '1234'),
+--        ('Doberman', 'Moringo@garka.com', '1234');

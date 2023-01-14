@@ -1,0 +1,3 @@
+-- INSERT INTO msvc_cursos (nombre)
+-- VALUES ('Robbie, camino a la sensibilidad'),
+--        ('Como ser un garka - por Moringo');

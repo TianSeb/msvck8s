@@ -9,11 +9,11 @@ import java.util.Optional;
 public interface CursoService {
     List<Curso> listar();
     Optional<Curso> porId(Long idCurso);
+    Optional<Curso> porIdConUsuarios(Long idCurso);
     Curso guardar(Curso curso);
-    void eliminar(Long idCurso);
-
+    void eliminarCurso(Long idCurso);
+    void eliminarCursoUsuarioPorId(Long id);
     Optional<Usuario> asignarUsuario(Usuario usuario,Long cursoId);
     Optional<Usuario> crearUsuario(Usuario usuario,Long cursoId);
     Optional<Usuario> eliminarUsuario(Usuario usuario,Long cursoId);
-
 }

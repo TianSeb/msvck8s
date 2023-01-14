@@ -1,6 +1,6 @@
 package com.example.cursos.service;
 
-import com.example.cursos.client.UsuarioClienRest;
+import com.example.cursos.client.UsuarioClientRest;
 import com.example.cursos.model.Usuario;
 import com.example.cursos.model.entity.Curso;
 import com.example.cursos.model.entity.CursoUsuario;
@@ -16,9 +16,9 @@ import java.util.stream.StreamSupport;
 public class CursoServiceImpl implements CursoService {
     private final CursoRepository cursoRepository;
 
-    private final UsuarioClienRest client;
+    private final UsuarioClientRest client;
 
-    public CursoServiceImpl(CursoRepository cursoRepository, UsuarioClienRest client) {
+    public CursoServiceImpl(CursoRepository cursoRepository, UsuarioClientRest client) {
         this.cursoRepository = cursoRepository;
         this.client = client;
     }
@@ -39,6 +39,25 @@ public class CursoServiceImpl implements CursoService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Optional<Curso> porIdConUsuarios(Long idCurso) {
+        Optional<Curso> o = cursoRepository.findById(idCurso);
+        if(o.isPresent()) {
+            Curso curso = o.get();
+            if (!curso.getCursoUsuarios().isEmpty()) {
+                List<Long> ids = curso.getCursoUsuarios()
+                        .stream()
+                        .map(CursoUsuario::getUsuarioId)
+                        .toList();
+                List<Usuario> listaUsuarios = client.obtenerAlumnosPorCurso(ids);
+                curso.setUsuarios(listaUsuarios);
+            }
+            return Optional.of(curso);
+        }
+        return Optional.empty();
+    }
+
+    @Override
     @Transactional
     public Curso guardar(Curso curso) {
         return cursoRepository.save(curso);
@@ -46,8 +65,14 @@ public class CursoServiceImpl implements CursoService {
 
     @Override
     @Transactional
-    public void eliminar(Long idCurso) {
+    public void eliminarCurso(Long idCurso) {
         cursoRepository.deleteById(idCurso);
+    }
+
+    @Override
+    @Transactional
+    public void eliminarCursoUsuarioPorId(Long id) {
+        cursoRepository.eliminarCursoUsuarioPorId(id);
     }
 
     @Override

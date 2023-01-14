@@ -13,7 +13,6 @@ import javax.validation.Valid;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api/cursos")
 public record CursoController(CursoService cursoService) {
 
     @GetMapping
@@ -23,13 +22,13 @@ public record CursoController(CursoService cursoService) {
 
     @GetMapping("/{id}")
     public ResponseEntity<? extends Curso> buscarId(@PathVariable Long id) {
-        Optional<Curso> curso = cursoService.porId(id);
+        Optional<Curso> curso = cursoService.porIdConUsuarios(id);//cursoService.porId(id);
         return curso.<ResponseEntity<? extends Curso>>map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<?>  crear(@Valid @RequestBody Curso curso, BindingResult result) {
+    public ResponseEntity<?> crear(@Valid @RequestBody Curso curso, BindingResult result) {
 
         return result.hasErrors() ? validar(result)
                 : ResponseEntity.status(HttpStatus.CREATED).body(cursoService.guardar(curso));
@@ -46,7 +45,7 @@ public record CursoController(CursoService cursoService) {
 
         if (response.isPresent()) {
             Curso cursoDb = response.get();
-            cursoDb.setName(curso.getName());
+            cursoDb.setNombre(curso.getNombre());
             cursoDb.setUsuarios(curso.getUsuarios());
 
             return ResponseEntity.status(HttpStatus.CREATED)
@@ -59,7 +58,7 @@ public record CursoController(CursoService cursoService) {
     public ResponseEntity<HttpStatus> eliminar(@PathVariable Long id) {
         Optional<Curso> response = cursoService.porId(id);
         if (response.isPresent()) {
-            cursoService.eliminar(response.get().getId());
+            cursoService.eliminarCurso(response.get().getId());
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
@@ -114,6 +113,12 @@ public record CursoController(CursoService cursoService) {
                     .body(o.get());
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/eliminar-curso-usuario/{id}")
+    public ResponseEntity<?> eliminarCursoUsuarioPorId(@PathVariable Long id) {
+        cursoService.eliminarCursoUsuarioPorId(id);
+        return ResponseEntity.noContent().build();
     }
 
     private static ResponseEntity<Map<String, String>> validar(BindingResult result) {

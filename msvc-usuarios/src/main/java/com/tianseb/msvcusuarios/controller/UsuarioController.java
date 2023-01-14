@@ -11,7 +11,6 @@ import javax.validation.Valid;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api/usuarios")
 public record UsuarioController(UsuarioService usuarioService) {
 
     @GetMapping
@@ -83,6 +82,11 @@ public record UsuarioController(UsuarioService usuarioService) {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/usuarios-por-curso")
+    public ResponseEntity<List<Usuario>> obtenerAlumnosPorCurso(@RequestParam List<Long> ids) {
+        return ResponseEntity.ok(usuarioService.listarPorIds(ids));
     }
 
     private static ResponseEntity<Map<String, String>> validar(BindingResult result) {

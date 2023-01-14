@@ -21,7 +21,7 @@ public class Curso {
 
     @Column(unique = true )
     @NotEmpty
-    private String name;
+    private String nombre;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "curso_id")
