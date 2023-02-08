@@ -11,8 +11,9 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - postgres
+      - spring
     restart: unless-stopped
+
   pgadmin:
     container_name: pgadmin
     image: dpage/pgadmin4
@@ -25,11 +26,43 @@ services:
     ports:
       - "5050:80"
     networks:
+      - spring
+    restart: unless-stopped
+
+  msvc-usuarios:
+    container_name: msvc-usuarios
+    #image: usuarios
+    build:
+      context: ./
+      dockerfile: ./msvc-usuarios/Dockerfile
+    ports:
+      - "8001:8001"
+    env_file:
+      - ./msvc-usuarios/.env
+    networks:
+      - spring
+    depends_on:
       - postgres
+    restart: unless-stopped
+  msvc-cursos:
+    container_name: msvc-cursos
+    #image: usuarios
+    build:
+      context: ./
+      dockerfile: ./msvc-cursos/Dockerfile
+    ports:
+      - "8002:8002"
+    env_file:
+      - ./msvc-cursos/.env
+    networks:
+      - spring
+    depends_on:
+      - postgres
+      - msvc-usuarios
     restart: unless-stopped
 
 networks:
-  postgres:
+  spring:
     driver: bridge
 volumes:
   postgres:
