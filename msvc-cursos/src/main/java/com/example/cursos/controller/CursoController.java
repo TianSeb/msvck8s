@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.*;
@@ -28,10 +29,15 @@ public record CursoController(CursoService cursoService) {
     }
 
     @PostMapping
-    public ResponseEntity<?> crear(@Valid @RequestBody Curso curso, BindingResult result) {
-
-        return result.hasErrors() ? validar(result)
-                : ResponseEntity.status(HttpStatus.CREATED).body(cursoService.guardar(curso));
+    public ResponseEntity<?> crear(@Valid @RequestBody Curso curso,
+                                   BindingResult result) {
+        try {
+            return result.hasErrors() ? validar(result)
+                    : ResponseEntity.status(HttpStatus.CREATED).body(cursoService.guardar(curso));
+        } catch (Exception e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
     }
 
     @PutMapping("/{id}")

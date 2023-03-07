@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pgadmin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: pgadmin
+  template:
+    metadata:
+      labels:
+        role: pgadmin
+    spec:
+      containers:
+        - name: pgadmin
+          image: dpage/pgadmin4
+          ports:
+            - containerPort: 80
+          env:
+            - name: PGADMIN_DEFAULT_EMAIL
+              value: admin@admin.com
+            - name: PGADMIN_DEFAULT_PASSWORD
+              value: pass
+            - name: PGADMIN_CONFIG_SERVER_MODE
+              value: 'False'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: pgadmin
+  name: pgadmin
+  namespace: default
+spec:
+  ports:
+    - name: padmin-port
+      nodePort: 30165
+      port: 80
+      targetPort: 80
+  type: NodePort
+  selector:
+    app: pgadmin

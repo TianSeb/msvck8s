@@ -1,63 +1,47 @@
 services:
-  postgres:
-    container_name: postgres
-    image: postgres
-    environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: pass
-      PGDATA: /data/postgres
-    volumes:
-      - postgres:/data/postgres
-    ports:
-      - "5432:5432"
-    networks:
-      - spring
-    restart: unless-stopped
-
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@admin.com}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
-    volumes:
-      - pgadmin:/var/lib/pgadmin
-    ports:
-      - "5050:80"
-    networks:
-      - spring
-    restart: unless-stopped
-
   msvc-usuarios:
     container_name: msvc-usuarios
-    #image: usuarios
-    build:
-      context: ./
-      dockerfile: ./msvc-usuarios/Dockerfile
+    image: alasstian/usuarios:latest
+#    build:
+#      context: ./
+#      dockerfile: ./msvc-usuarios/Dockerfile
     ports:
       - "8001:8001"
-    env_file:
-      - ./msvc-usuarios/.env
+#    env_file:
+#      - ./msvc-usuarios/.env
+    environment:
+      PORT: 8001
+      DB_HOST: localhost:5432
+      DB_DATABASE: msvc_usuarios
+      DB_USERNAME: user
+      DB_PASSWORD: pass
+      CURSOS_URL: msvc_cursos:8002
     networks:
       - spring
-    depends_on:
-      - postgres
+#    depends_on:
+#      - postgres
     restart: unless-stopped
   msvc-cursos:
     container_name: msvc-cursos
-    #image: usuarios
-    build:
-      context: ./
-      dockerfile: ./msvc-cursos/Dockerfile
+    image: alasstian/cursos:latest
+#    build:
+#      context: ./
+#      dockerfile: ./msvc-cursos/Dockerfile
     ports:
       - "8002:8002"
-    env_file:
-      - ./msvc-cursos/.env
+#    env_file:
+#      - ./msvc-cursos/.env
+    environment:
+      PORT: 8002
+      DB_HOST: localhost:5432
+      DB_DATABASE: msvc_cursos
+      DB_USERNAME: user
+      DB_PASSWORD: pass
+      USUARIOS_URL: msvc_usuarios:8001
     networks:
       - spring
     depends_on:
-      - postgres
+#      - postgres
       - msvc-usuarios
     restart: unless-stopped
 

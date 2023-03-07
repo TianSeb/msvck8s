@@ -28,4 +28,5 @@ COPY --from=builder $TARGET_FOLDER/msvc-cursos-0.0.1-SNAPSHOT.jar .
 ENV PORT 8002
 EXPOSE $PORT
 
+#CMD sleep 10 && java -jar msvc-cursos-0.0.1-SNAPSHOT.jar
 CMD ["java", "-jar", "msvc-cursos-0.0.1-SNAPSHOT.jar"]

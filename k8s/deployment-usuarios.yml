@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: msvc-usuarios
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: msvc-usuarios
+  template:
+    metadata:
+      labels:
+        role: msvc-usuarios
+    spec:
+      containers:
+        - name: usuarios
+          image: alasstian/usuarios:latest
+          ports:
+            - containerPort: 8001
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                name: msvc-usuarios
+                key: port
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                name: msvc-usuarios
+                key: db_host
+            - name: DB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                name: msvc-usuarios
+                key: db_database
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                name: msvc-usuarios
+                key: db_username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                name: msvc-usuarios
+                key: db_password
+            - name: CURSOS_URL
+              valueFrom:
+                configMapKeyRef:
+                name: msvc-usuarios
+                key: cursos_url
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: msvc-usuarios
+spec:
+  ports:
+    - port: 8001
+      protocol: TCP
+      targetPort: 8001
+  type: LoadBalancer
+  selector:
+    role: msvc-usuarios
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: msvc-usuarios
+data:
+  port: "8001"
+  db_host: "postgres14:5432"
+  db_database: msvc_usuarios
+  cursos_url: "msvc_cursos:8002"
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: msvc-usuarios
+type: Opaque
+data:
+  db_username: dXNlcg==
+  db_password: cGFzcw==
