@@ -21,33 +21,49 @@ spec:
             - name: PORT
               valueFrom:
                 configMapKeyRef:
-                name: msvc-usuarios
-                key: port
+                  name: msvc-usuarios
+                  key: port
             - name: DB_HOST
               valueFrom:
                 configMapKeyRef:
-                name: msvc-usuarios
-                key: db_host
+                  name: msvc-usuarios
+                  key: db_host
             - name: DB_DATABASE
               valueFrom:
                 configMapKeyRef:
-                name: msvc-usuarios
-                key: db_database
+                  name: msvc-usuarios
+                  key: db_database
             - name: DB_USERNAME
               valueFrom:
                 secretKeyRef:
-                name: msvc-usuarios
-                key: db_username
+                  name: msvc-usuarios
+                  key: db_username
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                name: msvc-usuarios
-                key: db_password
+                  name: msvc-usuarios
+                  key: db_password
             - name: CURSOS_URL
               valueFrom:
                 configMapKeyRef:
-                name: msvc-usuarios
-                key: cursos_url
+                  name: msvc-usuarios
+                  key: cursos_url
+#          readinessProbe:
+#            httpGet:
+#              port: 8001
+#              path: /actuator/health/readiness
+#              scheme: HTTP
+#            initialDelaySeconds: 10
+#            periodSeconds: 25
+#            timeoutSeconds: 15
+#          livenessProbe:
+#            httpGet:
+#              port: 8001
+#              path: /actuator/health/readiness
+#              scheme: HTTP
+#            initialDelaySeconds: 10
+#            periodSeconds: 25
+#            timeoutSeconds: 15
 ---
 apiVersion: v1
 kind: Service
@@ -69,8 +85,8 @@ metadata:
   name: msvc-usuarios
 data:
   port: "8001"
-  db_host: "postgres14:5432"
-  db_database: msvc_usuarios
+  db_host: "postgres:5432"
+  db_database: "msvc_usuarios"
   cursos_url: "msvc_cursos:8002"
 
 ---

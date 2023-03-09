@@ -21,33 +21,56 @@ spec:
             - name: PORT
               valueFrom:
                 configMapKeyRef:
-                name: msvc-cursos
-                key: port
+                  name: msvc-cursos
+                  key: port
             - name: DB_HOST
               valueFrom:
                 configMapKeyRef:
-                name: msvc-cursos
-                key: db_host
+                  name: msvc-cursos
+                  key: db_host
             - name: DB_DATABASE
               valueFrom:
                 configMapKeyRef:
-                name: msvc-cursos
-                key: db_database
+                  name: msvc-cursos
+                  key: db_database
             - name: DB_USERNAME
               valueFrom:
                 secretKeyRef:
-                name: msvc-cursos
-                key: db_username
+                  name: msvc-cursos
+                  key: db_username
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                name: msvc-cursos
-                key: db_password
+                  name: msvc-cursos
+                  key: db_password
             - name: USUARIOS_URL
               valueFrom:
                 configMapKeyRef:
-                name: msvc-cursos
-                key: usuarios_url
+                  name: msvc-cursos
+                  key: usuarios_url
+#          readinessProbe:
+#            httpGet:
+#              port: 8001
+#              path: /actuator/health/readiness
+#              scheme: HTTP
+#            initialDelaySeconds: 10
+#            periodSeconds: 25
+#            timeoutSeconds: 15
+#          livenessProbe:
+#            httpGet:
+#              port: 8001
+#              path: /actuator/health/readiness
+#              scheme: HTTP
+#            initialDelaySeconds: 10
+#            periodSeconds: 25
+#            timeoutSeconds: 15
+#          resources:
+#            requests:
+#              memory: "512Mi"
+#              cpu: "500m"
+#            limits:
+#              memory: "900Mi"
+#              cpu: "900m"
 ---
 apiVersion: v1
 kind: Service
@@ -69,9 +92,9 @@ metadata:
   name: msvc-cursos
 data:
   port: "8002"
-  db_host: "postgres14:5432"
-  db_database: msvc_cursos
-  usuario_url: "msvc_usuarios:8001"
+  db_host: "postgres:5432"
+  db_database: "msvc_cursos"
+  usuarios_url: "msvc_usuarios:8001"
 
 ---
 apiVersion: v1
